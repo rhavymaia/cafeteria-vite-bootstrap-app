@@ -1,101 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Container, Table, Form, Button } from 'react-bootstrap';
-
-import ClienteFormModal from './ClienteFormModal';
-import ClienteContext from './context/ClienteContext';
+import { ClienteAdicionar } from './ClienteAdicionar';
+import ClienteBuscar from './ClienteBuscar';
+import ClienteListar from './ClienteListar';
+import { ClienteContextProvider } from './context/ClienteContext';
 
 const Cliente = () => {
-  const [show, setShow] = useState(false);
-
-  const [inputs, setInputs] = useState({});
-
-  const [clientes, setClientes] = useState([]);
-
-  const handleClick = (event) => {
-    console.log('clicou! ');
-  };
-
-  const handleChange = (event) => {
-    setInputs({ ...inputs, [event.target.name]: event.target.value });
-  };
-
-  const handleModal = () => {
-    setShow(!show);
-  };
-
-  useEffect(() => {
-    fetch('http://localhost:5000/clientes', { method: 'GET' })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`${response.status} ${response.statusText}`);
-          // return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setClientes([...data]);
-      })
-      .catch((error) => {});
-  }, []);
-
   return (
-    <>
-      <ClienteContext.Provider
-        value={{ show, handleModal, clientes, setClientes }}
-      >
-        <Container className="mt-3">
-          <Button variant="primary" onClick={handleModal}>
-            +
-          </Button>
-          <ClienteFormModal
-            show={show}
-            handleModal={handleModal}
-            setClientes={setClientes}
-          ></ClienteFormModal>
-        </Container>
-        <Container>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Busca</Form.Label>
-              <Form.Control
-                name="consulta"
-                value={inputs.consulta || ''}
-                type="text"
-                placeholder="Digite um valor para buscar"
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Button variant="primary" type="button" onClick={handleClick}>
-              Buscar
-            </Button>
-          </Form>
-        </Container>
-        <Container className="mt-3">
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Sobrenome</th>
-                <th>E-mail</th>
-                <th>Celular</th>
-              </tr>
-            </thead>
-            <tbody>
-              {clientes.map((cliente, i) => {
-                return (
-                  <tr key={i}>
-                    <td>{cliente.nome}</td>
-                    <td>{cliente.sobrenome}</td>
-                    <td>{cliente.email}</td>
-                    <td>{cliente.celular}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
-        </Container>
-      </ClienteContext.Provider>
-    </>
+    <ClienteContextProvider>
+      <ClienteAdicionar></ClienteAdicionar>
+      <ClienteBuscar></ClienteBuscar>
+      <ClienteListar></ClienteListar>
+    </ClienteContextProvider>
   );
 };
 
