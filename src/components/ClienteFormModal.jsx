@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Container, Table, Form, Button, Modal } from 'react-bootstrap';
+import { useContext, useState } from 'react';
+import { Form, Button, Modal } from 'react-bootstrap';
+import ClienteContext from './context/ClienteContext';
 
-const ClienteFormModal = ({ show, handleModal, clientes, setClientes }) => {
+const ClienteFormModal = () => {
+  const { show, handleModal, clientes, setClientes } =
+    useContext(ClienteContext);
+
   const [inputs, setInputs] = useState({});
 
   const handleChange = (event) => {

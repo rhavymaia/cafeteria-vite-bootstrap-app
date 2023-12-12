@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Container, Table, Form, Button, Modal } from 'react-bootstrap';
+import { Container, Table, Form, Button } from 'react-bootstrap';
+
 import ClienteFormModal from './ClienteFormModal';
+import ClienteContext from './context/ClienteContext';
 
 const Cliente = () => {
   const [show, setShow] = useState(false);
@@ -38,58 +40,61 @@ const Cliente = () => {
 
   return (
     <>
-      <Container className="mt-3">
-        <Button variant="primary" onClick={handleModal}>
-          +
-        </Button>
-        <ClienteFormModal
-          show={show}
-          handleModal={handleModal}
-          clientes={clientes}
-          setClientes={setClientes}
-        ></ClienteFormModal>
-      </Container>
-      <Container>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Busca</Form.Label>
-            <Form.Control
-              name="consulta"
-              value={inputs.consulta || ''}
-              type="text"
-              placeholder="Digite um valor para buscar"
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Button variant="primary" type="button" onClick={handleClick}>
-            Buscar
+      <ClienteContext.Provider
+        value={{ show, handleModal, clientes, setClientes }}
+      >
+        <Container className="mt-3">
+          <Button variant="primary" onClick={handleModal}>
+            +
           </Button>
-        </Form>
-      </Container>
-      <Container className="mt-3">
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Sobrenome</th>
-              <th>E-mail</th>
-              <th>Celular</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clientes.map((cliente, i) => {
-              return (
-                <tr key={i}>
-                  <td>{cliente.nome}</td>
-                  <td>{cliente.sobrenome}</td>
-                  <td>{cliente.email}</td>
-                  <td>{cliente.celular}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      </Container>
+          <ClienteFormModal
+            show={show}
+            handleModal={handleModal}
+            setClientes={setClientes}
+          ></ClienteFormModal>
+        </Container>
+        <Container>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Busca</Form.Label>
+              <Form.Control
+                name="consulta"
+                value={inputs.consulta || ''}
+                type="text"
+                placeholder="Digite um valor para buscar"
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Button variant="primary" type="button" onClick={handleClick}>
+              Buscar
+            </Button>
+          </Form>
+        </Container>
+        <Container className="mt-3">
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Sobrenome</th>
+                <th>E-mail</th>
+                <th>Celular</th>
+              </tr>
+            </thead>
+            <tbody>
+              {clientes.map((cliente, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{cliente.nome}</td>
+                    <td>{cliente.sobrenome}</td>
+                    <td>{cliente.email}</td>
+                    <td>{cliente.celular}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Container>
+      </ClienteContext.Provider>
     </>
   );
 };
